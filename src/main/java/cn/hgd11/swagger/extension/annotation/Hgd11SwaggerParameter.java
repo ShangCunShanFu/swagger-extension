@@ -10,9 +10,9 @@ import java.lang.annotation.*;
  * @description:
  **************************************/
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target(ElementType.PARAMETER)
 @Documented
-public @interface Hgd11SwaggerModel {
+public @interface Hgd11SwaggerParameter {
     /**
      * A brief description of this model.
      * @return
@@ -20,27 +20,27 @@ public @interface Hgd11SwaggerModel {
     String description() default "";
 
     /**
-     * 该模型的标题，该属性可在index属性中进行设置<br/>
-     * 换句话说，即使在此进行了设置，该值也会被index属性值覆盖
+     * 参数的位置，有效的参数为{@code path}, {@code query}, {@code body},
+     * {@code header} or {@code form}.
      * @return
      */
-    String title() default "";
+    String in() default "body";
 
     /**
-     * The type of the model,eg:object
+     * 实例的名称
      * @return
      */
-    String type() default "object";
+    String name() default "";
 
     /**
-     * The properties of the model.
+     * 是否为必传项
      * @return
      */
-    Hgd11SwaggerProperties properties();
+    boolean required() default true;
 
     /**
-     * title的代理
+     * The model of the parameter.
      * @return
      */
-    String index();
+    Hgd11SwaggerModel model();
 }

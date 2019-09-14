@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Documented
-public @interface Hgd11SwaggerResponseProperty {
+public @interface Hgd11SwaggerProperty {
 
     /**
      * A brief description of this property.
@@ -34,7 +34,7 @@ public @interface Hgd11SwaggerResponseProperty {
     String index();
 
 
-    String[] child() default {};
+    String[] children() default {};
 
     /**
      * Limits the acceptable values for this parameter.
@@ -98,13 +98,6 @@ public @interface Hgd11SwaggerResponseProperty {
      * @since 1.5.11
      */
     boolean allowEmptyValue() default false;
-
-    /**
-     * 当前对象的父节点，当指定交节点时，须使用父节点的index属性
-     *
-     * @return the parent's name(or key)
-     */
-    String parent() default "";
 
     /**
      * The format of the {@link #dataType}

@@ -17,7 +17,7 @@ import java.util.jar.JarFile;
  * @Date: Created in 2019/8/2 13:38
  * @Description:
  **************************************/
-public class PackageUtil {
+public class PackageUtils {
 
     /**
      * 获取某包下（包括该包的所有子包）所有类

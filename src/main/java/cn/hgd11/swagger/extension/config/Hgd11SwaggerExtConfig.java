@@ -1,10 +1,7 @@
 package cn.hgd11.swagger.extension.config;
 
 import cn.hgd11.swagger.extension.entity.MethodEntity;
-import cn.hgd11.swagger.extension.util.PackageUtil;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
-import org.springframework.context.annotation.Configuration;
+import cn.hgd11.swagger.extension.util.PackageUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,37 +16,39 @@ import java.util.*;
  * @date: Created in 2019/8/14 14:39
  * @description:
  **************************************/
-@Configuration
 public class Hgd11SwaggerExtConfig {
 
-    public Hgd11SwaggerExtConfig() {
-        initPathMethodMap();
+    public Map<MethodEntity, Method> getPathMethodMap() {
+        return pathMethodMap;
+    }
+
+    public void setPathMethodMap(Map<MethodEntity, Method> pathMethodMap) {
+        this.pathMethodMap = pathMethodMap;
     }
 
     /**
      * 封装controller中路径与方法的映射
      */
-    private Map<MethodEntity, Method> pathMetohdMap;
+    private Map<MethodEntity, Method> pathMethodMap;
 
-    public Map<MethodEntity, Method> getPathMetohdMap() {
-        return pathMetohdMap;
-    }
 
-    public void setPathMetohdMap(Map<MethodEntity, Method> pathMetohdMap) {
-        this.pathMetohdMap = pathMetohdMap;
-    }
+    /**
+     * 在该方法中，使用都须调用cn.hgd11.swagger.extension.config.Hgd11SwaggerExtConfig#initPathMethodMapAssist(java.lang.String)<br/>
+     * 并指定项目中controller层的根目录,如：com.navinfo.rainbow.devops.controller
+     */
 
-    public void initPathMethodMap() {
+    public void initPathMethodMapAssist(String controllerBasePackage) {
         try {
-            setPathMetohdMap(new HashMap<>(256));
+            if(this.pathMethodMap == null){
+                setPathMethodMap(new HashMap<>(256));
+            }
+
+            Map<MethodEntity, Method> pathMethodMap = getPathMethodMap();
 
             // 加载配置信息，读取到controller的根路径,暂时没有考虑多个根路径
-            org.apache.commons.configuration.Configuration propertiesConfig;
-            propertiesConfig = new PropertiesConfiguration("properties/fields.properties");
-            String controllerBasePackage = propertiesConfig.getString("swagger.controllerBasePackage");
             List<String> controllerNameList = null;
             if (controllerBasePackage != null) {
-                controllerNameList = PackageUtil.getClassName(controllerBasePackage);
+                controllerNameList = PackageUtils.getClassName(controllerBasePackage);
             }
             // 如果没有配置根路径，将无法断续下一步操作，直接结果
             if (controllerNameList == null) {
@@ -108,7 +107,7 @@ public class Hgd11SwaggerExtConfig {
                                         uri += methodRequestMappingValue;
                                         methodEntity.setUri(uri);
                                         methodEntity.setRequestMethod(method);
-                                        pathMetohdMap.put(methodEntity, declaredMethod);
+                                        pathMethodMap.put(methodEntity, declaredMethod);
                                     }
                                 }
                             } else {
@@ -116,14 +115,14 @@ public class Hgd11SwaggerExtConfig {
                                     MethodEntity methodEntity=new MethodEntity();
                                     methodEntity.setUri(uri);
                                     methodEntity.setRequestMethod(method);
-                                    pathMetohdMap.put(methodEntity, declaredMethod);
+                                    pathMethodMap.put(methodEntity, declaredMethod);
                                 }
                             }
                         }
                     }
                 }
             }
-        } catch (ConfigurationException | IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

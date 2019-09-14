@@ -12,6 +12,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Documented
-public @interface Hgd11SwaggerResponseProperties {
-    Hgd11SwaggerResponseProperty[] value();
+public @interface Hgd11SwaggerModelRef {
+    String ref();
 }

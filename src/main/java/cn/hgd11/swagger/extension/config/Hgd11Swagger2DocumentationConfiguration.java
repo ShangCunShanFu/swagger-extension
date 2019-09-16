@@ -57,19 +57,19 @@ public class Hgd11Swagger2DocumentationConfiguration {
     }
 
     @Bean
-    public Hgd11SwaggerHandlerMapping hgd11SwaggerExtConfig() {
+    public Hgd11SwaggerPathMethodMapping hgd11SwaggerExtConfig() {
         String baseControllerPackage = environment.getProperty("hgd11-swagger.baseControllerPackage");
         Assert.notNull(baseControllerPackage,
             "请配置controller层根目录，如果您使用properties配置文件，请添加\nhgd11-swagger.baseControllerPackage\n如果您使用yml配置文件，请添加\nhgd11-swagger:\n\tbaseControllerPackage:");
 
-        Hgd11SwaggerHandlerMapping hgd11SwaggerHandlerMapping = new Hgd11SwaggerHandlerMapping();
-        hgd11SwaggerHandlerMapping.initPathMethodMapAssist(baseControllerPackage);
-        return hgd11SwaggerHandlerMapping;
+        Hgd11SwaggerPathMethodMapping hgd11SwaggerPathMethodMapping = new Hgd11SwaggerPathMethodMapping();
+        hgd11SwaggerPathMethodMapping.initPathMethodMapAssist(baseControllerPackage);
+        return hgd11SwaggerPathMethodMapping;
     }
 
     @Bean
     public Hgd11SwaggerConverter hgd11SwaggerConverter(Environment environment,
-        @Qualifier("hgd11SwaggerExtConfig") Hgd11SwaggerHandlerMapping swaggerExtConfig) {
+        @Qualifier("hgd11SwaggerExtConfig") Hgd11SwaggerPathMethodMapping swaggerExtConfig) {
         return new Hgd11SwaggerConverter(environment, swaggerExtConfig);
     }
 
@@ -83,9 +83,4 @@ public class Hgd11Swagger2DocumentationConfiguration {
     public Hgd11SwaggerAspect hgd11SwaggerAspect() {
         return new Hgd11SwaggerAspect();
     }
-
-//    @Bean
-//    private Hgd11SwaggerRunner hgd11SwaggerRunner(DispatcherServlet dispatcherServlet) {
-//        return new Hgd11SwaggerRunner(dispatcherServlet);
-//    }
 }

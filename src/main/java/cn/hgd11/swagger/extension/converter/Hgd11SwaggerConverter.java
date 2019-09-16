@@ -1,7 +1,7 @@
 package cn.hgd11.swagger.extension.converter;
 
 import cn.hgd11.swagger.extension.annotation.*;
-import cn.hgd11.swagger.extension.config.Hgd11SwaggerHandlerMapping;
+import cn.hgd11.swagger.extension.config.Hgd11SwaggerPathMethodMapping;
 import cn.hgd11.swagger.extension.entity.Hgd11SwaggerSchema;
 import cn.hgd11.swagger.extension.entity.MethodEntity;
 import cn.hgd11.swagger.extension.entity.Parameter;
@@ -35,12 +35,12 @@ public class Hgd11SwaggerConverter {
 
     private Environment environment;
 
-    private Hgd11SwaggerHandlerMapping swaggerExtConfig;
+    private Hgd11SwaggerPathMethodMapping swaggerExtConfig;
 
     public Hgd11SwaggerConverter() {
     }
 
-    public Hgd11SwaggerConverter(Environment environment, Hgd11SwaggerHandlerMapping swaggerExtConfig) {
+    public Hgd11SwaggerConverter(Environment environment, Hgd11SwaggerPathMethodMapping swaggerExtConfig) {
         this.environment = environment;
         this.swaggerExtConfig = swaggerExtConfig;
     }

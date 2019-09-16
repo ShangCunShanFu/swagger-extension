@@ -16,7 +16,7 @@ import java.util.*;
  * @date: Created in 2019/8/14 14:39
  * @description:
  **************************************/
-public class Hgd11SwaggerHandlerMapping {
+public class Hgd11SwaggerPathMethodMapping {
 
     public Map<MethodEntity, Method> getPathMethodMap() {
         return pathMethodMap;

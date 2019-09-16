@@ -1,7 +1,7 @@
 package cn.hgd11.swagger.extension.converter;
 
 import cn.hgd11.swagger.extension.annotation.*;
-import cn.hgd11.swagger.extension.config.Hgd11SwaggerExtConfig;
+import cn.hgd11.swagger.extension.config.Hgd11SwaggerHandlerMapping;
 import cn.hgd11.swagger.extension.entity.Hgd11SwaggerSchema;
 import cn.hgd11.swagger.extension.entity.MethodEntity;
 import cn.hgd11.swagger.extension.entity.Parameter;
@@ -35,12 +35,12 @@ public class Hgd11SwaggerConverter {
 
     private Environment environment;
 
-    private Hgd11SwaggerExtConfig swaggerExtConfig;
+    private Hgd11SwaggerHandlerMapping swaggerExtConfig;
 
     public Hgd11SwaggerConverter() {
     }
 
-    public Hgd11SwaggerConverter(Environment environment, Hgd11SwaggerExtConfig swaggerExtConfig) {
+    public Hgd11SwaggerConverter(Environment environment, Hgd11SwaggerHandlerMapping swaggerExtConfig) {
         this.environment = environment;
         this.swaggerExtConfig = swaggerExtConfig;
     }
@@ -161,6 +161,13 @@ public class Hgd11SwaggerConverter {
          */
         JSONObject ref = new JSONObject();
 
+        JSONObject pathValue = (JSONObject) e2.getValue();
+        JSONArray parameters = pathValue.getJSONArray("parameters");
+        if(parameters==null){
+            parameters=new JSONArray();
+            pathValue.put("parameters",parameters);
+        }
+
         java.lang.reflect.Parameter[] methodParameters = method.getParameters();
         for (java.lang.reflect.Parameter tmp : methodParameters) {
             Hgd11SwaggerParameter hgd11SwaggerParameter = tmp.getAnnotation(Hgd11SwaggerParameter.class);
@@ -169,28 +176,6 @@ public class Hgd11SwaggerConverter {
             String title;
 
             String parameterName = tmp.getName();
-            JSONObject pathValue = (JSONObject) e2.getValue();
-            JSONArray parameters = pathValue.getJSONArray("parameters");
-            JSONArray newParameters = new JSONArray();
-
-            if (parameters != null) {
-                for (Object parameter : parameters) {
-                    JSONObject ele = null;
-                    if (parameter instanceof JSONObject) {
-                        ele = (JSONObject) parameter;
-                    } else if (parameter instanceof String) {
-                        ele = JSONObject.parseObject((String) parameter);
-                    }
-
-                    if (ele != null && !parameterName.equals(ele.getString("name"))) {
-                        newParameters.add(parameter);
-                    }
-                }
-            }
-
-            pathValue.put("parameters", newParameters);
-
-            Hgd11SwaggerSchema schema = new Hgd11SwaggerSchema();
 
             Parameter parameter = new Parameter();
             if (hgd11SwaggerParameter != null) {
@@ -215,7 +200,25 @@ public class Hgd11SwaggerConverter {
             }
 
             parameter.setSchema(ref);
-            newParameters.add(parameter);
+            addParameter(parameters, parameter);
+        }
+    }
+
+    private void addParameter(JSONArray parameters, Parameter parameter) {
+        boolean hasAdded = false;
+        for (int i = 0; i < parameters.size(); i++) {
+            JSONObject exit = parameters.getJSONObject(i);
+            if (exit.getString("name").equals(parameter.getName())) {
+                // 说明需要将添加了Hgd11SwaggerParameter或Hgd11SwaggerParameterRef注解的参数替换原来Swagger自己扫描到的参数
+                parameters.add(parameter);
+                parameters.remove(i);
+                hasAdded = true;
+                break;
+            }
+        }
+
+        if (!hasAdded) {
+            parameters.add(parameter);
         }
     }
 

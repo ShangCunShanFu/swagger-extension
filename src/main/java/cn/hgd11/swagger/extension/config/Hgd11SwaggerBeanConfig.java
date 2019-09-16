@@ -30,15 +30,15 @@ public class Hgd11SwaggerBeanConfig {
     }
 
     @Bean
-    public Hgd11SwaggerExtConfig hgd11SwaggerExtConfig() {
-        Hgd11SwaggerExtConfig hgd11SwaggerExtConfig = new Hgd11SwaggerExtConfig();
-        hgd11SwaggerExtConfig.initPathMethodMapAssist(baseControllerPackage);
-        return hgd11SwaggerExtConfig;
+    public Hgd11SwaggerHandlerMapping hgd11SwaggerExtConfig() {
+        Hgd11SwaggerHandlerMapping hgd11SwaggerHandlerMapping = new Hgd11SwaggerHandlerMapping();
+        hgd11SwaggerHandlerMapping.initPathMethodMapAssist(baseControllerPackage);
+        return hgd11SwaggerHandlerMapping;
     }
 
     @Bean
     public Hgd11SwaggerConverter hgd11SwaggerConverter(Environment environment,
-        @Qualifier("hgd11SwaggerExtConfig") Hgd11SwaggerExtConfig swaggerExtConfig) {
+        @Qualifier("hgd11SwaggerExtConfig") Hgd11SwaggerHandlerMapping swaggerExtConfig) {
         return new Hgd11SwaggerConverter(environment, swaggerExtConfig);
     }
 
